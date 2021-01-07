@@ -10,7 +10,7 @@ container.addEventListener("mousemove", (e) => {
 });
 
 // create an array to save corona objects
-const coronaArr = []
+const coronaArr = [];
 
 setInterval(()=>{
   //get container width
@@ -70,10 +70,23 @@ container.addEventListener("click", e => {
   bulletDiv.style.left = e.clientX + 'px';
   // add bulletDiv to the container
   container.append(bulletDiv);
+
+  // set the start bottom for the bulletDiv
+  let bottom = 100;
+
+  // get container height
+  let containerHeight = container.offsetHeight;
   // create set interval to make the bullets move up
-  
+  const interval = setInterval(()=>{
+    // check the bullet is outside the container so we need to delete the bullet div and kill the interval. 
+    if (bottom > containerHeight) {
+    clearInterval(interval);
+    container.removeChild(bulletDiv);
+  } else {
+    bottom += 25;
+    bulletDiv.style.bottom = bottom + 'px';
+  }
+  },50)
 
-  
-});
-
+})
 
