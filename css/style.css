@@ -37,3 +37,17 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
 }
+
+.bullet{
+    position: absolute;
+    width: 5px;
+    height: 10px;
+    bottom: 100px;
+    left: calc(50% - 10px);
+    background-color: white;
+    
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: center;
+
+}

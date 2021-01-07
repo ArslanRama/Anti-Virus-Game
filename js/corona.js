@@ -2,7 +2,7 @@
 const container = document.querySelector("#container");
 const injection = document.querySelector("#injection");
 const pointsDiv = document.querySelector("#pointsDiv");
-const corona = document.querySelector('corona')
+
 
 // add mousemove event listener to control the injection position.
 container.addEventListener("mousemove", (e) => {
@@ -59,4 +59,21 @@ setInterval(()=>{
   })
 
 }, 50)
+
+// create clik event listener for the container to create the bullet
+container.addEventListener("click", e => {
+  // create bullet html element
+  const bulletDiv = document.createElement('div');
+  // set class to bullet div
+  bulletDiv.classList.add('bullet');
+  // set left position to the bulletDiv
+  bulletDiv.style.left = e.clientX + 'px';
+  // add bulletDiv to the container
+  container.append(bulletDiv);
+  // create set interval to make the bullets move up
+  
+
+  
+});
+
 
