@@ -1,68 +1,81 @@
 // get html elements
-const container = document.querySelector("#container");
-const injection = document.querySelector("#injection");
-const pointsDiv = document.querySelector("#pointsDiv");
+const container = document.querySelector('#container');
+const injection = document.querySelector('#injection');
+const pointsDiv = document.querySelector('#pointsDiv');
+
+// add mousemove event listener to container to control injection position
+container.addEventListener('mousemove', e => {
+    //console.log(e);
+    injection.style.left = (e.clientX - 12.5) + 'px';
+})
 
 
-// add mousemove event listener to control the injection position.
-container.addEventListener("mousemove", (e) => {
-  injection.style.left = (e.clientX -12.5) + "px";
-});
 
-// create an array to save corona objects
+// create array to save corona objects 
 const coronaArr = [];
 
-setInterval(()=>{
-  //get container width
-  let containerWidth = container.offsetWidth;
-  // create coorona div element
-  const coronaDiv = document.createElement('div');
-  // set class for corona div
-  coronaDiv.classList.add('corona')
-  // set the left position for the div randomly
-  let coronaLeft = Math.floor(Math.random()* containerWidth) + 1;
-  coronaDiv.style.left=coronaLeft+'px'
+// interval to generate coronDivs
+setInterval(() => {
 
-  // add corona div to container
-  container.append(coronaDiv)
+// get container width
+let containerWidth = container.offsetWidth;
 
-  // create corona object
-  let coronaObj ={
+// create corona div element
+const coronaDiv = document.createElement('div');
+
+// set class for corona div
+coronaDiv.classList.add('corona');
+
+// set the left position for the div randomly
+let coronaLeft = Math.floor(Math.random() * containerWidth) + 1;
+
+coronaDiv.style.left = coronaLeft + 'px';
+
+// add coronaDiv to container
+container.append(coronaDiv);
+
+// create corona object
+let coronaObj = {
     coronaElement: coronaDiv,
-    top:0,
-    left:coronaLeft
-  }
-  // add the coronaObj to coronaArr
-  coronaArr.push(coronaObj)
+    top: 0,
+    left: coronaLeft
+}
+
+// add the coronaObj to coronaArr
+coronaArr.push(coronaObj)
 
 }, 1000)
 
-// create interval to move coronaDivs down by increasing the top property on the style
-setInterval(()=>{
 
-  // get height of the container
-  let containerHeight = container.offsetHeight
-  
-  // loop through coronaArr to change the tip of coronaElements
-  coronaArr.forEach((element, index)=>{
-    // check the top of corona div is greater than the container's height so we need to delete the coronaDiv and coronaElement
-    if(element.top > containerHeight){
-      // delete coronaElement from html DOM
-      container.removeChild(element.coronaElement);
-      // delete the element from the array
-      coronaArr.splice(index, 1);
-      lost++;
-      pointsDiv.innerHTML = 'Score: ' + score + '||| Lost:' + lost;
+let lost = 0;
 
-      // call explode function to detect if the bulletDiv touch the coronaDiv
-    } else {
-      element.top += 10;
-      element.coronaElement.style.top = element.top + 'px';
-    }
-   
-  })
 
-}, 50)
+// create interval to move the coronaDivs down by increasing the top property on them style
+setInterval(() => {
+
+    // get height of the container
+    let containerHeight = container.offsetHeight;
+
+
+
+    // loop through coronaArr to change the top of coronaElements
+    coronaArr.forEach((element, idx) => {
+        // check the top of coronaDiv is greater than the container height so we need to delete the coronadiv
+        if ( element.top > containerHeight) {
+            // delete corona element from HTML (DOM)
+            container.removeChild(element.coronaElement);
+            // delete the element from the array
+            coronaArr.splice(idx, 1);
+            lost++;
+            pointsDiv.innerHTML = 'Score: ' + score + ' ||| Lost:' + lost;
+
+        } else {
+            element.top += 10; // element.top = element.top + 10;
+            element.coronaElement.style.top = element.top + 'px';
+        }
+        
+    })
+}, 50);
 
 // create bullet sound
 let bulletSound = document.createElement('audio')
@@ -73,82 +86,91 @@ bulletSound.style.display = 'none';
 bulletSound.volume = 0.1;
 container.append(bulletSound);
 
-// create explosion sound
+// create game sound
 let gameSound = document.createElement('audio')
 gameSound.src = './sounds/game.mp3';
 gameSound.setAttribute('controls', 'none');
 gameSound.setAttribute('preload', 'auto');
 gameSound.style.display = 'none';
 gameSound.volume = 0.1;
-// gameSound.loop = true;
+gameSound.loop = true;
 container.append(gameSound);
 
-// create clik event listener for the container to create the bullet
-container.addEventListener("click", e => {
-  // play the game music
-  gameSound.play();
-  // play bullet sound
-  bulletSound.play();
-  // create bullet html element
-  const bulletDiv = document.createElement('div');
-  // set class to bullet div
-  bulletDiv.classList.add('bullet');
-  // set left position to the bulletDiv
-  bulletDiv.style.left = e.clientX + 'px';
-  // add bulletDiv to the container
-  container.append(bulletDiv);
 
-  // set the start bottom for the bulletDiv
-  let bottom = 100;
+// create click event listener for container to create the bullet
+container.addEventListener('click', e => {
+    //play gameSound
+    gameSound.play();
+    // play bulletSound
+    bulletSound.play();
 
-  // get container height
-  let containerHeight = container.offsetHeight;
-  // create set interval to make the bullets move up
-  const interval = setInterval(()=>{
-    // check the bullet is outside the container so we need to delete the bullet div and kill the interval. 
-    if (bottom > containerHeight) {
-    clearInterval(interval);
-    container.removeChild(bulletDiv);
-  } else {
-    bottom += 25;
-    bulletDiv.style.bottom = bottom + 'px';
-    // call explode function to detect if bulletDiv touches a coronaDiv
-    explode(bulletDiv, interval);
-  }
-  },50)
+    //create bullet html element
+    const bulletDiv = document.createElement('div');
 
+    // set class to bullet div
+    bulletDiv.classList.add('bullet');
+
+    // set left position for bulletDiv
+    bulletDiv.style.left = e.clientX + 'px';
+
+    // add bulletDiv to container
+    container.append(bulletDiv);
+
+
+    // set the start bottom for the bulletDiv
+    let bottom = 100;
+
+    // get container height
+    let containerHeight = container.offsetHeight;
+
+    // create set interval to make the bullets move to top
+    const interval = setInterval(() => {
+        
+        // check the bullet is outside the container so we need to delete the bullet div and kill the interval
+        if (bottom > containerHeight) {
+            clearInterval(interval);
+            container.removeChild(bulletDiv);
+            
+        } else {
+            bottom += 25;
+            bulletDiv.style.bottom = bottom + 'px';
+            // call explode function to detect if bulletDiv touch  a coronaDiv
+            explode(bulletDiv, interval);
+        }
+
+    }, 50);
+    
 })
 
-// add a score
-let score = 0;
 
 // create explosion sound
-let explodeSound = document.createElement('audio')
-explodeSound.src = 'sounds/exp.wav';
-explodeSound.setAttribute('controls', 'none');
-explodeSound.setAttribute('preload', 'auto');
-explodeSound.style.display = 'none';
-explodeSound.volume = 0.1;
-container.append(explodeSound);
-// explode function to detect if bulletDiv touch a coronaDiv
-function explode(bulletElement, interval){
-  
-  // loop through coronaArr
-  coronaArr.forEach((corona, index)=>{
-    // check if coronaElement is in the same area as bulletElement
-    if(is_colliding(bulletElement, corona.coronaElement)){
-      clearInterval(interval);
-      container.removeChild(bulletElement);
-      coronaArr.splice(index, 1);
-      container.removeChild(corona.coronaElement);
-      score++;
-      pointsDiv.innerHTML = 'Score: ' + score;
-      //play explosion sound
-      explodeSound.play();
+let explosionSound = document.createElement('audio')
+explosionSound.src = './sounds/exp.wav';
+explosionSound.setAttribute('controls', 'none');
+explosionSound.setAttribute('preload', 'auto');
+explosionSound.style.display = 'none';
+explosionSound.volume = 0.1;
+container.append(explosionSound);
 
-    } 
-     
-  })
+let score = 0;
+// explode function to detect if bulletDiv touch  a coronaDiv
+function explode (bulletElement, interval) {
+
+    // loop through coronaArr 
+    coronaArr.forEach((corona, idx) => {
+        // check if coronaElement is in the same areawith the bulletElement
+        if (is_colliding(bulletElement, corona.coronaElement)) {
+            clearInterval(interval);
+            container.removeChild(bulletElement);
+            coronaArr.splice(idx, 1);
+            container.removeChild(corona.coronaElement);
+            score++; // score = score + 1;  score +=1;
+            pointsDiv.innerHTML = 'Score: ' + score + ' ||| Lost:' + lost;
+            explosionSound.play();
+
+
+        }
+    })
 }
 
 let is_colliding = function( $div1, $div2 ) {
