@@ -131,3 +131,9 @@ let is_colliding = function( $div1, $div2 ) {
   // Return whether it IS colliding
   return ! not_colliding;
 };
+
+let audio = new Audio("bullet.wav");
+
+document.onclick = function() {
+  audio.play();
+}
