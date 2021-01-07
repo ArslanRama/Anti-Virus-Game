@@ -51,9 +51,10 @@ setInterval(()=>{
       container.removeChild(element.coronaElement);
       // delete the element from the array
       coronaArr.splice(index, 1);
+      lost++;
+      pointsDiv.innerHTML = 'Score: ' + score + '||| Lost:' + lost;
 
       // call explode function to detect if the bulletDiv touch the coronaDiv
-
     } else {
       element.top += 10;
       element.coronaElement.style.top = element.top + 'px';
@@ -63,12 +64,31 @@ setInterval(()=>{
 
 }, 50)
 
+// create bullet sound
+let bulletSound = document.createElement('audio')
+bulletSound.src = './sounds/bullet.wav';
+bulletSound.setAttribute('controls', 'none');
+bulletSound.setAttribute('preload', 'auto');
+bulletSound.style.display = 'none';
+bulletSound.volume = 0.1;
+container.append(bulletSound);
 
-
-
+// create explosion sound
+let gameSound = document.createElement('audio')
+gameSound.src = './sounds/game.mp3';
+gameSound.setAttribute('controls', 'none');
+gameSound.setAttribute('preload', 'auto');
+gameSound.style.display = 'none';
+gameSound.volume = 0.1;
+// gameSound.loop = true;
+container.append(gameSound);
 
 // create clik event listener for the container to create the bullet
 container.addEventListener("click", e => {
+  // play the game music
+  gameSound.play();
+  // play bullet sound
+  bulletSound.play();
   // create bullet html element
   const bulletDiv = document.createElement('div');
   // set class to bullet div
@@ -99,8 +119,20 @@ container.addEventListener("click", e => {
 
 })
 
+// add a score
+let score = 0;
+
+// create explosion sound
+let explodeSound = document.createElement('audio')
+explodeSound.src = 'sounds/exp.wav';
+explodeSound.setAttribute('controls', 'none');
+explodeSound.setAttribute('preload', 'auto');
+explodeSound.style.display = 'none';
+explodeSound.volume = 0.1;
+container.append(explodeSound);
 // explode function to detect if bulletDiv touch a coronaDiv
 function explode(bulletElement, interval){
+  
   // loop through coronaArr
   coronaArr.forEach((corona, index)=>{
     // check if coronaElement is in the same area as bulletElement
@@ -109,6 +141,11 @@ function explode(bulletElement, interval){
       container.removeChild(bulletElement);
       coronaArr.splice(index, 1);
       container.removeChild(corona.coronaElement);
+      score++;
+      pointsDiv.innerHTML = 'Score: ' + score;
+      //play explosion sound
+      explodeSound.play();
+
     } 
      
   })
@@ -132,8 +169,3 @@ let is_colliding = function( $div1, $div2 ) {
   return ! not_colliding;
 };
 
-let audio = new Audio("bullet.wav");
-
-document.onclick = function() {
-  audio.play();
-}
