@@ -7,3 +7,5 @@ Use the mouse to move and click left to shoot. It takes just a hit to kill a vir
 ## Requirements
 
 Game runs best on latest chrome/Firefox.
+
+[Clear here to see the link](https://arslanrama.github.io/Anti-Virus-Game/)
