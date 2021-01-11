@@ -190,4 +190,3 @@ let is_colliding = function( $div1, $div2 ) {
   // Return whether it IS colliding
   return ! not_colliding;
 };
-
